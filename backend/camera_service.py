@@ -1,5 +1,5 @@
 import cv2
-from fall_detection import draw_pose
+#from fall_detection import draw_pose
 
 camera = cv2.VideoCapture(0)
 
@@ -10,7 +10,7 @@ def generate_frames():
         if not success:
             break
 
-        frame = draw_pose(frame)
+        # frame = draw_pose(frame)
 
         ret, buffer = cv2.imencode(".jpg", frame)
 

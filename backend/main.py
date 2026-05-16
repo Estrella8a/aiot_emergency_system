@@ -8,6 +8,7 @@ import os
 from sensor_service import SensorService
 from emergency_engine import EmergencyEngine
 from fall_detection import is_fall_detected
+#from fall_detection import run_pose_detection
 
 app = Flask(
     __name__,
@@ -28,8 +29,7 @@ emergency_engine = EmergencyEngine(alert_service, sensor_service)
 def simulation_loop():
 
     while True:
-
-        camera_fall = is_fall_detected()
+        camera_fall = False
 
         emergency_engine.update(camera_fall)
 
