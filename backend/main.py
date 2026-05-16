@@ -4,12 +4,8 @@ from camera_service import generate_frames
 from alert_service import AlertService
 import threading
 import time
-from flask import send_from_directory
 import os
 from sensor_service import SensorService
-from emergency_engine import EmergencyEngine
-#from fall_detection import is_fall_detected
-#from fall_detection import run_pose_detection
 
 app = Flask(
     __name__,
@@ -25,30 +21,32 @@ CORS(app)
 
 alert_service = AlertService()
 sensor_service = SensorService()
-emergency_engine = EmergencyEngine(alert_service, sensor_service)
 
 def simulation_loop():
 
-    while True:
-        camera_fall = False
+    previous_status = None
 
-        emergency_engine.update(camera_fall)
+    while True:
+
+        alert_service.update()
+
+        current_status = alert_service.get_status()["status"]
+
+        if current_status != previous_status:
+
+            if current_status in ["possible_fall", "emergency_countdown", "emergency"]:
+                sensor_service.buzzer_on()
+
+            if current_status == "safe":
+                sensor_service.buzzer_off()
+
+            previous_status = current_status
 
         time.sleep(1)
 
 @app.route("/")
 def home():
-
-    web_path = os.path.join(
-        os.path.dirname(__file__),
-        "..",
-        "web_app"
-    )
-
-    return send_from_directory(
-        web_path,
-        "index.html"
-    )
+    return "AIOT Emergency System Running"
 
 @app.route("/simulate_fall")
 def simulate_fall():
@@ -57,13 +55,23 @@ def simulate_fall():
 
 @app.route("/user_ok")
 def user_ok():
+
     alert_service.user_is_ok()
-    return jsonify({"message": "User confirmed okay"})
+    sensor_service.buzzer_off()
+
+    return jsonify({
+        "message": "User confirmed okay"
+    })
 
 @app.route("/manual_emergency")
 def manual_emergency():
+
     alert_service.manual_emergency()
-    return jsonify({"message": "Emergency manually triggered"})
+    sensor_service.buzzer_on()
+
+    return jsonify({
+        "message": "Emergency manually triggered"
+    })
 
 @app.route("/status")
 def status():
@@ -71,6 +79,7 @@ def status():
 
 @app.route("/ai_fall_trigger")
 def ai_fall_trigger():
+
     alert_service.detect_possible_fall()
 
     return jsonify({
@@ -160,4 +169,3 @@ if __name__ == "__main__":
     simulation_thread.start()
 
     app.run(host="0.0.0.0", port=5000)
-
