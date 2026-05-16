@@ -69,6 +69,14 @@ def manual_emergency():
 def status():
     return jsonify(alert_service.get_status())
 
+@app.route("/ai_fall_trigger")
+def ai_fall_trigger():
+    alert_service.detect_possible_fall()
+
+    return jsonify({
+        "message": "AI fall trigger received"
+    })
+
 @app.route("/sensor_status")
 def sensor_status():
 
@@ -153,12 +161,3 @@ if __name__ == "__main__":
 
     app.run(host="0.0.0.0", port=5000)
 
-
-@app.route("/ai_fall_trigger")
-def ai_fall_trigger():
-
-    alert_service.detect_possible_fall()
-
-    return jsonify({
-        "message": "AI fall trigger received"
-    })
