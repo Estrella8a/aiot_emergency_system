@@ -152,3 +152,13 @@ if __name__ == "__main__":
     simulation_thread.start()
 
     app.run(host="0.0.0.0", port=5000)
+
+
+@app.route("/ai_fall_trigger")
+def ai_fall_trigger():
+
+    alert_service.detect_possible_fall()
+
+    return jsonify({
+        "message": "AI fall trigger received"
+    })
