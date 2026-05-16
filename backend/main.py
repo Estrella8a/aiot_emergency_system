@@ -46,7 +46,17 @@ def simulation_loop():
 
 @app.route("/")
 def home():
-    return "AIOT Emergency System Running"
+
+    web_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "web_app"
+    )
+
+    return send_from_directory(
+        web_path,
+        "index.html"
+    )
 
 @app.route("/simulate_fall")
 def simulate_fall():
