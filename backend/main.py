@@ -4,6 +4,7 @@ from camera_service import generate_frames
 from alert_service import AlertService
 import threading
 import time
+from flask import send_from_directory
 import os
 from sensor_service import SensorService
 from emergency_engine import EmergencyEngine
@@ -37,7 +38,17 @@ def simulation_loop():
 
 @app.route("/")
 def home():
-    return "AIOT Emergency System Running"
+
+    web_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "web_app"
+    )
+
+    return send_from_directory(
+        web_path,
+        "index.html"
+    )
 
 @app.route("/simulate_fall")
 def simulate_fall():
