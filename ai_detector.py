@@ -13,7 +13,9 @@ pose = mp_pose.Pose(
     min_tracking_confidence=0.5
 )
 
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(
+    "http://192.168.0.132:5000/video_feed"
+)
 
 fall_detected = False
 last_trigger_time = 0
