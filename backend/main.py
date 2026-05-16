@@ -7,7 +7,7 @@ import time
 import os
 from sensor_service import SensorService
 from emergency_engine import EmergencyEngine
-from fall_detection import is_fall_detected
+#from fall_detection import is_fall_detected
 #from fall_detection import run_pose_detection
 
 app = Flask(
