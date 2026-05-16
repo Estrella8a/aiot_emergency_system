@@ -10,7 +10,8 @@ def generate_frames():
         if not success:
             break
 
-        frame = draw_pose(frame)
+        
+        ## frame = draw_pose(frame)
 
         ret, buffer = cv2.imencode(".jpg", frame)
 
