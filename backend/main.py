@@ -5,6 +5,9 @@ from alert_service import AlertService
 import threading
 import time
 import os
+from sensor_service import SensorService
+from emergency_engine import EmergencyEngine
+from fall_detection import is_fall_detected
 
 app = Flask(
     __name__,
@@ -19,16 +22,16 @@ app = Flask(__name__)
 CORS(app)
 
 alert_service = AlertService()
+sensor_service = SensorService()
+emergency_engine = EmergencyEngine(alert_service, sensor_service)
 
 def simulation_loop():
 
     while True:
 
-        if is_fall_detected():
+        camera_fall = is_fall_detected()
 
-            alert_service.trigger_possible_fall()
-
-        alert_service.update()
+        emergency_engine.update(camera_fall)
 
         time.sleep(1)
 
@@ -54,6 +57,64 @@ def manual_emergency():
 @app.route("/status")
 def status():
     return jsonify(alert_service.get_status())
+
+@app.route("/sensor_status")
+def sensor_status():
+
+    return jsonify(
+        sensor_service.get_sensor_status()
+    )
+
+
+@app.route("/simulate_pir_on")
+def simulate_pir_on():
+
+    sensor_service.simulate_pir(True)
+
+    return jsonify({
+        "message": "PIR ON"
+    })
+
+
+@app.route("/simulate_pir_off")
+def simulate_pir_off():
+
+    sensor_service.simulate_pir(False)
+
+    return jsonify({
+        "message": "PIR OFF"
+    })
+
+
+@app.route("/simulate_sound/<int:value>")
+def simulate_sound(value):
+
+    sensor_service.simulate_sound(value)
+
+    return jsonify({
+        "message": f"Sound set to {value}"
+    })
+
+
+@app.route("/buzzer_on")
+def buzzer_on():
+
+    sensor_service.buzzer_on()
+
+    return jsonify({
+        "message": "Buzzer ON"
+    })
+
+
+@app.route("/buzzer_off")
+def buzzer_off():
+
+    sensor_service.buzzer_off()
+
+    return jsonify({
+        "message": "Buzzer OFF"
+    })
+
 
 @app.route("/video_feed")
 def video_feed():
