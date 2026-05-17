@@ -26,7 +26,7 @@ class SensorService:
 
             GPIO.setup(BUZZER_PIN, GPIO.OUT)
 
-            GPIO.output(BUZZER_PIN, GPIO.LOW)
+            GPIO.output(BUZZER_PIN, GPIO.HIGH)
 
             print("GPIO initialized")
 
@@ -63,7 +63,7 @@ class SensorService:
 
             return
 
-        self.GPIO.output(BUZZER_PIN, self.GPIO.HIGH)
+        self.GPIO.output(BUZZER_PIN, self.GPIO.LOW)
 
         print("BUZZER ON")
 
@@ -77,7 +77,7 @@ class SensorService:
 
             return
 
-        self.GPIO.output(BUZZER_PIN, self.GPIO.LOW)
+        self.GPIO.output(BUZZER_PIN, self.GPIO.HIGH)
 
         print("BUZZER OFF")
 
