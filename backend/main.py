@@ -34,11 +34,14 @@ def simulation_loop():
 
         if current_status != previous_status:
 
-            if current_status in ["possible_fall", "emergency_countdown", "emergency"]:
-                sensor_service.buzzer_on()
+            if current_status == "possible_fall":
+                sensor_service.beep(times=1)
 
-            if current_status == "safe":
-                sensor_service.buzzer_off()
+            elif current_status == "emergency_countdown":
+                sensor_service.beep(times=2)
+
+            elif current_status == "emergency":
+                sensor_service.beep(times=3)
 
             previous_status = current_status
 

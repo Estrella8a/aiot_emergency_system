@@ -1,4 +1,5 @@
 from config import RUN_MODE, PIR_PIN, BUZZER_PIN, SOUND_CHANNEL, SOUND_THRESHOLD
+import time
 
 
 class SensorService:
@@ -16,19 +17,13 @@ class SensorService:
 
         try:
 
-            import RPi.GPIO as GPIO
+            from gpiozero import MotionSensor, Buzzer
 
-            self.GPIO = GPIO
+            self.pir = MotionSensor(PIR_PIN)
 
-            GPIO.setmode(GPIO.BCM)
+            self.buzzer = Buzzer(BUZZER_PIN)
 
-            GPIO.setup(PIR_PIN, GPIO.IN)
-
-            GPIO.setup(BUZZER_PIN, GPIO.OUT)
-
-            GPIO.output(BUZZER_PIN, GPIO.HIGH)
-
-            print("GPIO initialized")
+            print("GPIOZERO initialized")
 
         except Exception as e:
 
@@ -39,14 +34,13 @@ class SensorService:
         if RUN_MODE == "SIMULATION":
             return self.simulated_pir
 
-        return self.GPIO.input(PIR_PIN) == 1
+        return self.pir.motion_detected
 
     def read_sound(self):
 
         if RUN_MODE == "SIMULATION":
             return self.simulated_sound_value
 
-        # ADC real después
         return 0
 
     def is_loud_sound(self):
@@ -63,7 +57,7 @@ class SensorService:
 
             return
 
-        self.GPIO.output(BUZZER_PIN, self.GPIO.LOW)
+        self.buzzer.on()
 
         print("BUZZER ON")
 
@@ -77,9 +71,23 @@ class SensorService:
 
             return
 
-        self.GPIO.output(BUZZER_PIN, self.GPIO.HIGH)
+        self.buzzer.off()
 
         print("BUZZER OFF")
+
+    def beep(self, duration=0.25, times=1, pause=0.15):
+
+        print(f"BUZZER BEEP x{times}")
+
+        for _ in range(times):
+
+            self.buzzer_on()
+
+            time.sleep(duration)
+
+            self.buzzer_off()
+
+            time.sleep(pause)
 
     def simulate_pir(self, state):
 
@@ -102,6 +110,4 @@ class SensorService:
 
         if RUN_MODE == "RASPBERRY":
 
-            self.GPIO.output(BUZZER_PIN, self.GPIO.LOW)
-
-            self.GPIO.cleanup()
+            self.buzzer.off()
