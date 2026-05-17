@@ -66,6 +66,15 @@ def simulate_fall():
     alert_service.detect_possible_fall()
     return jsonify({"message": "Possible fall triggered"})
 
+@app.route("/test_buzzer")
+def test_buzzer():
+
+    sensor_service.beep(times=3)
+
+    return jsonify({
+        "message": "Buzzer test executed"
+    })
+
 @app.route("/user_ok")
 def user_ok():
 
