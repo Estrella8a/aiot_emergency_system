@@ -1,4 +1,4 @@
-RUN_MODE = "SIMULATION"
+RUN_MODE = "RASPBERRY"  # Options: "SIMULATION", "RASPBERRY"
 
 # Raspberry GPIO / Grove pins
 CAMERA_PORT = "CSI"
