@@ -73,26 +73,39 @@ class AlertService:
 
     def get_status(self):
 
+        import time
+
         message = ""
+        countdown = ""
+
+        now = time.time()
 
         if self.status == "safe":
             message = "Safe"
+            countdown = ""
 
         elif self.status == "fall_detected":
-            message = "Fall detected. Confirming..."
+            remaining = int(self.FALL_CONFIRMATION_SECONDS - (now - self.fall_detected_time))
+            message = "Fall detected..."
+            countdown = f"00:{max(remaining, 0):02d}"
 
         elif self.status == "possible_fall":
-            message = "Are you okay?"
+            remaining = int(self.USER_RESPONSE_SECONDS - (now - self.user_alert_time))
+            message = "Fall detected, are you okay?"
+            countdown = f"00:{max(remaining, 0):02d}"
 
         elif self.status == "emergency_countdown":
-            message = "Emergency will be sent soon..."
+            remaining = int(self.EMERGENCY_SEND_SECONDS - (now - self.emergency_countdown_time))
+            message = "Emergency message will be sent"
+            countdown = f"00:{max(remaining, 0):02d}"
 
         elif self.status == "emergency":
-            message = "Emergency sent to contacts"
+            message = "Emergency message sent"
+            countdown = "00:00"
 
         return {
             "status": self.status,
             "message": message,
-            "emergency_sent": self.emergency_sent,
-            "history": self.history[-10:]
+            "countdown": countdown,
+            "emergency_sent": self.emergency_sent
         }

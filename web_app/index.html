@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
 
     <meta charset="UTF-8">
@@ -12,66 +13,103 @@
 
     <style>
 
-        body{
-            font-family: Arial;
-            background: #111;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
+        body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                color: white;
+                text-align: center;
 
-        .card{
-            background: #222;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-        }
+                background-image: url("assets/background.png");
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
 
-        button{
-            width: 90%;
-            padding: 20px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            cursor: pointer;
-        }
+            .app {
+                width: 90%;
+                max-width: 900px;
+                margin: auto;
+                padding: 35px 0;
+            }
 
-        .ok{
-            background: #27ae60;
-            color: white;
-        }
+            h1 {
+                font-size: 42px;
+                margin-bottom: 25px;
+            }
 
-        .danger{
-            background: #c0392b;
-            color: white;
-        }
+            .camera-title {
+                font-size: 28px;
+                margin-bottom: 12px;
+            }
 
-        .warning{
-            background: #f39c12;
-            color: white;
-        }
+            .camera-box {
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                border-radius: 28px;
+                overflow: hidden;
+                margin: auto;
+                background: #111;
+            }
 
-        #status{
-            font-size: 22px;
-            margin-top: 15px;
-        }
+            #cameraFeed {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
 
-        .history-box{
-            margin-top:20px;
-            padding:20px;
-            background:#1e1e1e;
-        }
+            .status-title {
+                font-size: 34px;
+                margin-top: 25px;
+                margin-bottom: 5px;
+            }
 
-        .history-box ul{
-            list-style:none;
-            padding:0;
-        }
+            #status {
+                font-size: 28px;
+            }
 
-        .history-box li{
-            padding:10px;
-            border-bottom:1px solid #444;
-        }
+            #countdown {
+                font-size: 34px;
+                font-weight: bold;
+                margin-top: 8px;
+                color: white;
+            }
+
+            .ok-button {
+                width: 80%;
+                max-width: 650px;
+                height: 90px;
+                border: none;
+                background: none;
+                background-image: url("assets/button_ok.png");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                color: white;
+                font-size: 38px;
+                margin-top: 25px;
+            }
+
+            .ok-button:disabled {
+                background-image: url("assets/button_ok_disabled.png");
+                opacity: 0.8;
+            }
+
+            .history-toggle {
+                margin-top: 35px;
+                font-size: 32px;
+                cursor: pointer;
+            }
+
+            .history-box {
+                display: none;
+                margin-top: 15px;
+                font-size: 24px;
+                text-align: left;
+            }
+
+            .history-box.open {
+                display: block;
+            }
 
     </style>
 
@@ -79,69 +117,106 @@
 
 <body>
 
-    <h1>AIOT Emergency System</h1>
+    <div class="app">
 
-    <!-- STATUS -->
-    <div class="card">
+        <h1>Fall Detection System</h1>
 
-        <h2>Status</h2>
+        <div class="camera-title">Camera 1</div>
 
-        <div id="status">
-            Loading...
+        <div class="camera-box">
+            <img id="cameraFeed" src="/video_feed">
+        </div>
+
+        <div class="status-title">Current Status</div>
+
+        <div id="status">Safe</div>
+
+        <div
+            style="
+            margin-top:20px;
+            font-size:24px;">
+
+            Room Status
+
+            <div id="roomStatus">
+
+                No Occupancy Detected
+
+            </div>
+
+        </div>
+
+        <div
+            style="
+            margin-top:15px;
+            font-size:24px;">
+
+            Monitoring
+
+            <div id="monitoringStatus">
+
+                Inactive
+
+            </div>
+
+        </div>
+
+        <div id="countdown"></div>
+
+        <button
+            id="okButton"
+            class="ok-button"
+            onclick="userOk()"
+            disabled>
+            I’m Okay!
+        </button>
+
+        <div class="history-toggle" onclick="toggleHistory()">
+            Status History <span id="historyArrow">◀</span>
+        </div>
+
+        <div id="historyBox" class="history-box">
+            <ul id="history"></ul>
+        </div>
+
+
+
+        <div class="history-toggle"
+                onclick="toggleContacts()">
+
+                Emergency Contacts
+
+                <span id="contactsArrow">
+                    ◀
+                </span>
+
+            </div>
+
+            <div
+                id="contactsBox"
+                class="history-box">
+
+                <input
+                    id="contactName"
+                    placeholder="Name">
+
+                <br><br>
+
+                <input
+                    id="contactPhone"
+                    placeholder="Phone">
+
+                <br><br>
+
+                <button onclick="addContact()">
+                    Add Contact
+                </button>
+
+                <ul id="contactsList"></ul>
+
         </div>
 
     </div>
-
-    <!-- CAMERA -->
-    <div class="card">
-
-    <h2>Camera</h2>
-
-    <img
-        id="cameraFeed"
-        src="/video_feed"
-        style="
-            width:100%;
-            max-width:600px;
-            border-radius:15px;
-            display:block;
-            margin:auto;
-        "
-    >
-
-    </div>
-
-    <!-- HISTORY -->
-    <div class="history-box">
-
-        <h2>History</h2>
-
-        <ul id="history"></ul>
-
-    </div>
-
-    <!-- BUTTONS -->
-
-    <button class="warning"
-            onclick="simulateFall()">
-
-        Simulate Fall
-
-    </button>
-
-    <button class="ok"
-            onclick="userOk()">
-
-        I'm Okay
-
-    </button>
-
-    <button class="danger"
-            onclick="manualEmergency()">
-
-        Emergency
-
-    </button>
 
 <script>
 
@@ -156,25 +231,64 @@ async function updateStatus(){
         await response.json();
 
     // STATUS
-     document.getElementById("status").innerHTML =
-     data.message;
+    document.getElementById("status").innerHTML =
+        data.message;
 
-    // HISTORY
-    const historyList =
-        document.getElementById("history");
+    document.getElementById("countdown").innerHTML =
+        data.countdown;
 
-    historyList.innerHTML = "";
+     if (data.countdown === "") {
+            document.getElementById("countdown").style.display = "none";
+        } else {
+            document.getElementById("countdown").style.display = "block";
+        }
 
-    data.history.forEach(item => {
+        const okButton = document.getElementById("okButton");
+        const countdown = document.getElementById("countdown");
 
-        const li =
-            document.createElement("li");
+        if (
+            data.status === "possible_fall" ||
+            data.status === "emergency_countdown" ||
+            data.status === "emergency"
+        ) {
+            okButton.disabled = false;
+        } else {
+            okButton.disabled = true;
+        }
 
-        li.innerText = item;
+        if (data.status === "safe") {
 
-        historyList.appendChild(li);
+            countdown.innerHTML = "";
+            countdown.style.color = "white";
 
-    });
+        }
+        else if (data.status === "emergency") {
+
+            countdown.style.color = "#ff3b3b";
+
+        }
+        else {
+
+            countdown.style.color = "white";
+
+        }
+
+
+        const statusText =
+            document.getElementById("status");
+
+        if (data.status === "emergency") {
+
+            statusText.style.color = "#ff3b3b";
+            countdown.style.color = "#ff3b3b";
+
+        }
+        else {
+
+            statusText.style.color = "white";
+            countdown.style.color = "white";
+
+        }
 
 }
 
@@ -202,9 +316,201 @@ async function manualEmergency(){
 
 }
 
-setInterval(updateStatus, 1000);
+async function updateHistory() {
+
+    const response = await fetch("/history");
+
+    const data = await response.json();
+
+    const historyList =
+        document.getElementById("history");
+
+    historyList.innerHTML = "";
+
+    data.forEach(item => {
+
+        historyList.innerHTML += `
+            <li>
+                ${item.time}
+                -
+                ${item.event}
+            </li>
+        `;
+    });
+}
+
+async function loadContacts() {
+
+    const response =
+        await fetch("/contacts");
+
+    const contacts =
+        await response.json();
+
+    const list =
+        document.getElementById(
+            "contactsList"
+        );
+
+    list.innerHTML = "";
+
+    contacts.forEach(contact => {
+
+        list.innerHTML += `
+
+            <li>
+
+                ${contact.name}
+                -
+                ${contact.phone}
+
+                <button
+                onclick="
+                deleteContact(
+                ${contact.id}
+                )">
+
+                    X
+
+                </button>
+
+            </li>
+
+        `;
+    });
+}
+
+async function addContact() {
+
+    const name =
+        document.getElementById(
+            "contactName"
+        ).value;
+
+    const phone =
+        document.getElementById(
+            "contactPhone"
+        ).value;
+
+    await fetch(
+
+        "/add_contact",
+
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                name: name,
+
+                phone: phone
+
+            })
+
+        }
+
+    );
+
+    loadContacts();
+}
+
+async function deleteContact(
+    contactId
+) {
+
+    await fetch(
+        "/delete_contact/"
+        + contactId
+    );
+
+    loadContacts();
+}
+
+async function updateMonitoring() {
+
+    const response =
+        await fetch(
+            "/monitoring_status"
+        );
+
+    const data =
+        await response.json();
+
+    document.getElementById(
+        "roomStatus"
+    ).innerHTML =
+        data.room_status;
+
+    document.getElementById(
+        "monitoringStatus"
+    ).innerHTML =
+        data.monitoring;
+}
+
+function toggleContacts() {
+
+    const box =
+        document.getElementById(
+            "contactsBox"
+        );
+
+    const arrow =
+        document.getElementById(
+            "contactsArrow"
+        );
+
+    box.classList.toggle("open");
+
+    if (
+        box.classList.contains(
+            "open"
+        )
+    ) {
+
+        arrow.innerHTML = "▼";
+
+    }
+    else {
+
+        arrow.innerHTML = "◀";
+
+    }
+}
+
+function toggleHistory() {
+    const box = document.getElementById("historyBox");
+    const arrow = document.getElementById("historyArrow");
+
+    box.classList.toggle("open");
+
+    if (box.classList.contains("open")) {
+        arrow.innerHTML = "▼";
+    } else {
+        arrow.innerHTML = "◀";
+    }
+}
+
+setInterval(() => {
+
+    updateStatus();
+
+    updateHistory();
+
+    updateMonitoring();
+
+}, 1000);
 
 updateStatus();
+loadContacts();
+updateMonitoring();
 
 </script>
 
