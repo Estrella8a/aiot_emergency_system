@@ -17,6 +17,12 @@ camera = cv2.VideoCapture(
     "http://192.168.0.132:5000/video_feed"
 )
 
+print("Camera opened:", camera.isOpened())
+
+success, frame = camera.read()
+
+print("First frame:", success)
+
 fall_detected = False
 last_trigger_time = 0
 

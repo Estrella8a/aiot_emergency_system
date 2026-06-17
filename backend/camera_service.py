@@ -3,6 +3,9 @@
 import cv2
 
 camera = cv2.VideoCapture(0)
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+camera.set(cv2.CAP_PROP_FPS, 15)
 
 ##picam2 = Picamera2()
 ## picam2.configure(
