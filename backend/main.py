@@ -261,10 +261,13 @@ def test_buzzer():
         "message": "Buzzer test executed"
     })
 
+
 @app.route("/user_ok")
 def user_ok():
 
     global telegram_sent
+
+    previous_status = alert_service.get_status()["status"]
 
     telegram_sent = False
 
@@ -275,6 +278,30 @@ def user_ok():
     history_service.add(
         "User Confirmed Safe"
     )
+
+    if previous_status in [
+        "fall_detected",
+        "possible_fall",
+        "emergency_countdown"
+    ]:
+
+        message = """
+✅ FALSE ALARM
+
+The user confirmed they are safe.
+
+No emergency assistance is required.
+
+AIoT Emergency Detection System
+"""
+
+        telegram_service.send_message(
+            message
+        )
+
+        history_service.add(
+            "False alarm message sent"
+        )
 
     return jsonify({
         "message": "User confirmed okay"
